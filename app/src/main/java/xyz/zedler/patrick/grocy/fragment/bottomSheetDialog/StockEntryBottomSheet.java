@@ -215,6 +215,10 @@ public class StockEntryBottomSheet extends BaseBottomSheetDialogFragment {
       } else if (item.getItemId() == R.id.action_edit) {
         Toast.makeText(requireContext(), R.string.msg_not_implemented_yet, Toast.LENGTH_LONG).show();
         return true;
+      } else if (item.getItemId() == R.id.action_print_label) {
+        activity.getCurrentFragment().performAction(ACTION.PRINT_LABEL, stockEntry);
+        dismiss();
+        return true;
       }
       return false;
     });

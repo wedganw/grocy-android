@@ -374,6 +374,7 @@ public final class Constants {
     public final static String DELETE = "action_delete";
     public final static String COMPLETE = "action_complete";
     public final static String UNDO = "action_undo";
+    public final static String PRINT_LABEL = "action_print_label";
   }
 
   public final static class ARGUMENT {

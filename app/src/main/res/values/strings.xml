@@ -135,6 +135,7 @@
   <string name="action_skip_next_chore_schedule">Skip next chore schedule</string>
   <string name="action_reschedule_next_execution">Reschedule next execution</string>
   <string name="action_put_missing_products_on_shopping_list">Put missing products on shopping list</string>
+  <string name="action_print_label">Print label</string>
 
   <!-- %1$s is the number of products which are due soon. This string is the short form of e.g. "3 products are due soon" -> "3 due soon" -->
   <plurals name="msg_due_products">

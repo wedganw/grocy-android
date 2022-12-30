@@ -309,6 +309,13 @@ public class GrocyApi {
   }
 
   /**
+   * Prints the label of the given entrx
+   */
+  public String printEntryLabel(int entryId) {
+    return getUrl("/stock/entry/" + entryId + "/printlabel");
+  }
+
+  /**
    * Removes the given amount of the given product from stock
    */
   public String consumeProduct(int productId) {

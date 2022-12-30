@@ -45,4 +45,9 @@
     android:title="@string/action_consume_spoiled"
     app:showAsAction="never" />
 
+  <item
+      android:id="@+id/action_print_label"
+      android:title="@string/action_print_label"
+      app:showAsAction="never" />
+
 </menu>

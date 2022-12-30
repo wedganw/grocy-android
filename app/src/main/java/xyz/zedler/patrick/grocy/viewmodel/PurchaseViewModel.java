@@ -720,24 +720,53 @@ public class PurchaseViewModel extends BaseViewModel {
       sendEvent(Event.TRANSACTION_SUCCESS);
     };
 
-    dlHelper.postWithArray(
-        grocyApi.purchaseProduct(product.getId()),
-        body,
-        response -> {
-          ShoppingListItem shoppingListItem = formData.getShoppingListItemLive().getValue();
-          if (batchShoppingListItemIds != null && shoppingListItem != null) {
-            deleteShoppingListItem(shoppingListItem.getId(), () -> onResponse.onResponse(response));
-          } else {
-            onResponse.onResponse(response);
-          }
-        },
-        error -> {
-          showErrorMessage(error);
-          if (debug) {
-            Log.i(TAG, "purchaseProduct: " + error);
-          }
-        }
+    // Patch for Label printing
+    dlHelper.get(
+            grocyApi.getStockProductDetails(product.getId()),
+            responseGetLabelInfo -> {
+              try {
+                JSONObject productInfo = new JSONObject(responseGetLabelInfo);
+
+                // Get LabelType
+                productInfo.getJSONObject("product").getString("default_stock_label_type");
+
+                // Add LabelType to Add-Product Body
+                body.put("stock_label_type", productInfo.getJSONObject("product").getString("default_stock_label_type"));
+
+                dlHelper.postWithArray(
+                        grocyApi.purchaseProduct(product.getId()),
+                        body,
+                        response -> {
+                          ShoppingListItem shoppingListItem = formData.getShoppingListItemLive().getValue();
+                          if (batchShoppingListItemIds != null && shoppingListItem != null) {
+                            deleteShoppingListItem(shoppingListItem.getId(), () -> onResponse.onResponse(response));
+                          } else {
+                            onResponse.onResponse(response);
+                          }
+                        },
+                        error -> {
+                          showErrorMessage(error);
+                          if (debug) {
+                            Log.i(TAG, "purchaseProduct: " + error);
+                          }
+                        }
+                );
+
+              } catch (Exception e ){
+                Log.i(TAG, "purchaseProductGetLabelInfoParsing: Error while trying to get label type info");
+                Log.i(TAG, "purchaseProductGetLabelInfoParsing: " + e);
+                //Log.i(TAG, "####purchaseProductGetLabelInfo: Could not parse malformed JSON: \"" + responseGetLabelInfo + "\"");
+              };
+
+            },
+            errorGetLabelInfo -> {
+              if (debug) {
+                Log.i(TAG, "purchaseProductGetLabelInfoRequest: " + errorGetLabelInfo);
+              }
+            }
     );
+    // Patch for Label printing
+
   }
 
   private void undoTransaction(String transactionId, @Nullable ShoppingListItem shoppingListItem) {

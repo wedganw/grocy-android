@@ -53,6 +53,7 @@ import xyz.zedler.patrick.grocy.model.Location;
 import xyz.zedler.patrick.grocy.model.Product;
 import xyz.zedler.patrick.grocy.model.ProductBarcode;
 import xyz.zedler.patrick.grocy.model.QuantityUnit;
+import xyz.zedler.patrick.grocy.model.ShoppingListItem;
 import xyz.zedler.patrick.grocy.model.SnackbarMessage;
 import xyz.zedler.patrick.grocy.model.StockEntry;
 import xyz.zedler.patrick.grocy.model.Store;
@@ -282,6 +283,9 @@ public class StockEntriesViewModel extends BaseViewModel {
       case Constants.ACTION.CONSUME_SPOILED:
         consumeEntry(stockEntry, product, true);
         break;
+      case Constants.ACTION.PRINT_LABEL:
+        printLabel(stockEntry);
+        break;
     }
   }
 
@@ -435,6 +439,20 @@ public class StockEntriesViewModel extends BaseViewModel {
             Log.i(TAG, "openEntry: " + error);
           }
         }
+    );
+  }
+
+  private void printLabel(StockEntry stockEntry) {
+    dlHelper.get(
+            grocyApi.printEntryLabel(stockEntry.getId()),
+            responsePrintLabel -> {
+              Log.i(TAG, "printEntryLabel: Printing label for entry " + stockEntry.getId());
+            },
+            errorPrintLabel -> {
+              if (debug) {
+                Log.i(TAG, "printEntryLabel: " + errorPrintLabel);
+              }
+            }
     );
   }
 
